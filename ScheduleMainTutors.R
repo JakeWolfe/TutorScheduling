@@ -1,4 +1,5 @@
 #Main Work for MLC Scheduling
+# Reference: https://www.uwlax.edu/urc/jur-online/PDF/2016/Meyers-Morrison.Jack-Daniel.MTH.pdf
 
 #Librarys
 library("phonTools")
