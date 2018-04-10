@@ -19,62 +19,81 @@ function(input, output) {
       ))
       return()
     }
-
-    schedules <- getSchedule(input$signUpSchedule, input$tutorHours, input$classes, 
+    
+    schedules <- tryCatch({getSchedule(input$signUpSchedule, input$tutorHours, input$classes, 
                             input$dailyHours, input$timeOpenSlider[1], input$timeOpenSlider[2], 6)
+                      },
+                      error = function(cond) {
+                        showModal(modalDialog(
+                          title = "Error Creating Schedule with the following message",
+                          paste("", cond)
+                        ))
+                        
+                      },
+                      warning = function(cond) {
+                        showModal(modalDialog(
+                          title = "Warning Creating Schedule with the following message",
+                          paste("", cond)
+                        ))
+                      },
+                      finally = function(cond) {
+                        
+                      }
+    )
+        
   
     
     if (is.null(schedules)) {
-      showModal(modalDialog(
-        title = "Error Creating Schedule",
-        "Schedule was unable to be made, check you files and increase number of hours and try again"
-      ))
+      # showModal(modalDialog(
+      #   title = "Error Creating Schedule",
+      #   "Schedule was unable to be made, check you files and increase number of hours and try again"
+      # ))
       return()
     }
     
     numHours = input$timeOpenSlider[2] - input$timeOpenSlider[1]
     
-    output$mondaySchedule <- DT::renderDataTable(
-      schedules[[1]],
-      options = list(scrollX = TRUE, pageLength = numHours, callback = I(
-        'function(row, data) { $("td", row).css("text-align", "center"); }'
-      ))
-    )
-    
-    output$tuesdaySchedule <- DT::renderDataTable(
-      schedules[[2]],
-      options = list(scrollX = TRUE, pageLength = numHours, callback = I(
-        'function(row, data) { $("td", row).css("text-align", "center"); }'
-      ))
-    )
-    
-    output$wednesdaySchedule <- DT::renderDataTable(
-      schedules[[3]],
-      options = list(scrollX = TRUE, pageLength = numHours, callback = I(
-        'function(row, data) { $("td", row).css("text-align", "center"); }'
-      ))
-    )
-    
-    output$thursdaySchedule <- DT::renderDataTable(
-      schedules[[4]],
-      options = list(scrollX = TRUE, pageLength = numHours, callback = I(
-        'function(row, data) { $("td", row).css("text-align", "center"); }'
-      ))
-    )
-    
-    output$fridaySchedule <- DT::renderDataTable(
-      schedules[[5]],
-      options = list(scrollX = TRUE, pageLength = numHours, callback = I(
-        'function(row, data) { $("td", row).css("text-align", "center"); }'
-      ))
-    )
-    
-    output$saturdaySchedule <- DT::renderDataTable(
-      schedules[[6]],
-      options = list(scrollX = TRUE, pageLength = numHours, callback = I(
-        'function(row, data) { $("td", row).css("text-align", "center"); }'
-      ))
-    )
+    # output$mondaySchedule <- DT::renderDataTable(
+    #   schedules[[1]],
+    #   options = list(scrollX = TRUE, pageLength = numHours, callback = I(
+    #     'function(row, data) { $("td", row).css("text-align", "center"); }'
+    #   ))
+    # )
+    # 
+    # output$tuesdaySchedule <- DT::renderDataTable(
+    #   schedules[[2]],
+    #   options = list(scrollX = TRUE, pageLength = numHours, callback = I(
+    #     'function(row, data) { $("td", row).css("text-align", "center"); }'
+    #   ))
+    # )
+    # 
+    # output$wednesdaySchedule <- DT::renderDataTable(
+    #   schedules[[3]],
+    #   options = list(scrollX = TRUE, pageLength = numHours, callback = I(
+    #     'function(row, data) { $("td", row).css("text-align", "center"); }'
+    #   ))
+    # )
+    # 
+    # output$thursdaySchedule <- DT::renderDataTable(
+    #   schedules[[4]],
+    #   options = list(scrollX = TRUE, pageLength = numHours, callback = I(
+    #     'function(row, data) { $("td", row).css("text-align", "center"); }'
+    #   ))
+    # )
+    # 
+    # output$fridaySchedule <- DT::renderDataTable(
+    #   schedules[[5]],
+    #   options = list(scrollX = TRUE, pageLength = numHours, callback = I(
+    #     'function(row, data) { $("td", row).css("text-align", "center"); }'
+    #   ))
+    # )
+    # 
+    # output$saturdaySchedule <- DT::renderDataTable(
+    #   schedules[[6]],
+    #   options = list(scrollX = TRUE, pageLength = numHours, callback = I(
+    #     'function(row, data) { $("td", row).css("text-align", "center"); }'
+    #   ))
+    # )
     
     output$summary <- DT::renderDataTable(
       schedules$Stats$HourCounts,
